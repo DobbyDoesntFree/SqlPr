@@ -157,7 +157,7 @@ GROUP BY ROLLUP (DEPTNO, JOB); --이러면 DEPTNO 아래에 JOB (우측에서 �
 --Q20) 사원 테이블에서 부서, 직급별 급여 합 조회시 CUBE
 SELECT DEPTNO,JOB, COUNT(*), SUM(SAL)
 FROM SCOTT.EMP
-GROUP BY CUBE (DEPTNO, JOB); --이러면 DEPTNO 아래에 JOB (우측에서 좌측 순서로 그룹화)
+GROUP BY CUBE (DEPTNO, JOB); --이러면 DEPTNO 아래에 JOB (좌측에서 우측 순서로 그룹화)
 
 --Q21) GROUPING 함수는 ROLLUP, CUBE와 같이 사용
 /*
@@ -189,6 +189,7 @@ GROUP BY JOB, MGR; --마지막은 NULL 없음
 SELECT DEPTNO, JOB, MGR, AVG(SAL)
 FROM SCOTT.EMP
 GROUP BY GROUPING SETS ((DEPTNO, JOB, MGR),(DEPTNO, MGR), (JOB,MGR));
+
 
 --Q23)
 SELECT DEPTNO,JOB, MGR, SUM(SAL)
@@ -267,3 +268,9 @@ SELECT ENAME, DEPTNO, SAL, LEAD(SAL, 1, 0) OVER (ORDER BY SAL) AS NEXT_SAL01,
 LEAD(SAL, 1, SAL) OVER (ORDER BY SAL) AS NEXT_SAL02,
 LEAD(SAL, 1, SAL) OVER (PARTITION BY DEPTNO ORDER BY SAL) AS NEXT_SAL03
 FROM SCOTT.EMP;
+
+
+select job, DEPTNO, count(*)
+from EMP
+group by grouping sets(job,deptno)
+having count(*)>2;
